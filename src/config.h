@@ -170,6 +170,7 @@ NOTES:
 #define HAVE_DHCP
 #define HAVE_TFTP
 #define HAVE_SCRIPT
+#define HAVE_SOCK_SERVER
 /* #define HAVE_BROKEN_RTC */
 /* #define HAVE_DBUS */
 

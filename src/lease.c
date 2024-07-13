@@ -615,6 +615,16 @@ int do_script_run(time_t now)
   return 0; /* nothing to do */
 }
 
+#ifdef HAVE_SOCK_SERVER
+void lease_loop(void (*loop)(struct dhcp_lease *, unsigned long), unsigned long arg)
+{
+  struct dhcp_lease *lease;
+
+  for (lease = leases; lease; lease = lease->next)
+    (*loop)(lease, arg);
+}
+#endif
+
 #endif
 	  
 

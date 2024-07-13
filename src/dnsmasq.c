@@ -15,6 +15,7 @@
 */
 
 #include "dnsmasq.h"
+#include "sock_server.h"
 
 struct daemon *daemon;
 
@@ -169,6 +170,8 @@ int main (int argc, char **argv)
       dhcp_init();
     }
 #endif
+
+  sock_server_init();
 
   if (!enumerate_interfaces())
     die(_("failed to find list of interfaces: %s"), NULL, EC_MISC);
@@ -642,6 +645,8 @@ int main (int argc, char **argv)
       /* must do this just before select(), when we know no
 	 more calls to my_syslog() can occur */
       set_log_writer(&wset, &maxfd);
+
+      sock_server_setfds(&rset, &maxfd);
       
       if (select(maxfd+1, &rset, &wset, &eset, tp) < 0)
 	{
@@ -705,6 +710,8 @@ int main (int argc, char **argv)
 	helper_write();
 #  endif
 #endif
+
+      do_sock_server(&rset);
 
     }
 }

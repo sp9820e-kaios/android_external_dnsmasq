@@ -15,6 +15,7 @@
 */
 
 #include "dnsmasq.h"
+#include "sock_server.h"
 
 #ifdef HAVE_DHCP
 
@@ -1219,6 +1220,7 @@ size_t dhcp_reply(struct dhcp_context *context, char *iface_name, int int_index,
 	    override = lease->override;
 
 	  log_packet("DHCPACK", &mess->yiaddr, emac, emac_len, iface_name, hostname, mess->xid);  
+	  dhcp_clients_broadcast(DHCP_MESSAGE_NEW, (char *)emac, emac_len, &mess->yiaddr, hostname);
 	  
 	  clear_packet(mess, end);
 	  option_put(mess, end, OPTION_MESSAGE_TYPE, 1, DHCPACK);
@@ -1260,6 +1262,7 @@ size_t dhcp_reply(struct dhcp_context *context, char *iface_name, int int_index,
 	hostname = host_from_dns(mess->ciaddr);
 
       log_packet("DHCPACK", &mess->ciaddr, emac, emac_len, iface_name, hostname, mess->xid);
+      dhcp_clients_broadcast(DHCP_MESSAGE_NEW, (char *)emac, emac_len, &mess->ciaddr, hostname);
       
       if (context && context->netid.net)
 	{

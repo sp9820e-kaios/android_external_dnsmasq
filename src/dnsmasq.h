@@ -839,6 +839,9 @@ void lease_prune(struct dhcp_lease *target, time_t now);
 void lease_update_from_configs(void);
 int do_script_run(time_t now);
 void rerun_scripts(void);
+#ifdef HAVE_SOCK_SERVER
+void lease_loop(void (*loop)(struct dhcp_lease *, unsigned long), unsigned long arg);
+#endif
 #endif
 
 /* rfc2131.c */
